@@ -17,19 +17,19 @@ sport = input("sport : c/f \n")
 # Load the Diabetes dataset
 
 if sport == "c":
-    stringPath = "TestAndTraining\\calcio"
+    stringPath = "TestAndTraining/calcio"
     classi = ["1000 metri", "Navetta 10x5", "Scatto 30m", "Triplo salto in lungo"]
 
 else:
-    stringPath = "\\TestAndTraining\\futsal"
+    stringPath = "TestAndTraining/futsal"
     classi = ["1000 metri", "Navetta 5x10", "Scatto 10m", "Triplo salto in lungo"]
 
 p_test = []
 y_test = []
 
 for p in range(1, 6):
-    train = pd.read_csv(stringPath + "\\P" + str(p) + "\\training.csv")
-    test = pd.read_csv(stringPath + "\\P" + str(p) + "\\test.csv")
+    train = pd.read_csv(stringPath + "/P" + str(p) + "/training.csv")
+    test = pd.read_csv(stringPath + "/P" + str(p) + "/test.csv")
 
     y = train.Activity
     X = train.drop('Activity', axis=1)
