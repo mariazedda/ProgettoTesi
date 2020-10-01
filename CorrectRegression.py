@@ -1,15 +1,10 @@
 import csv
 import pandas as pd
-import numpy as np
 import warnings
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, max_error, mean_absolute_error, mean_squared_error
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from numpy import mean
 from scipy.stats import pearsonr
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 warnings.filterwarnings('ignore')
 
@@ -17,29 +12,9 @@ sport = input("sport : c/f \n")
 
 if sport == "c":
     stringPath = "TesterTrainingFile/calcio"
-    fileName = "featuresCalcioNormalized.csv"
 else:
     stringPath = "TesterTrainingFile/futsal"
-    fileName = "featuresFutsalNormalized.csv"
 
-"""data = pd.read_csv(fileName)
-dataCorrelation = data.corr()
-testColumn = dataCorrelation.shape[1]
-
-datasetShape = dataCorrelation.shape
-
-# dataCorrelation = dataCorrelation.Score
-dataCorrelation = dataCorrelation.Score
-
-rowSet = datasetShape[0]
-colSet = datasetShape[1]
-with open('DatasetCorrectFutsal.csv', 'w', newline='') as f:
-    wtr = csv.writer(f)
-    for row in range(0, rowSet-1):
-        c = dataCorrelation.iloc[row]
-        if c > 0.3:
-            wtr.writerow(dataCorrelation.index[[row]])
-"""
 P_test = []
 Y_test = []
 
@@ -101,10 +76,12 @@ print("MSE: ", mean_squared_error(Y_test, P_test))
 print("R2 test: ", r2_score(Y_test, P_test))
 print("Errore Massimo: ", max_error(Y_test, P_test))
 print("Correlazione tra previsti e effettivi:", pearsonr(Y_test, P_test)[0])
+
 with open('Experiment4Futsal.csv', 'a') as f:
     wtr = csv.writer(f)
     wtr.writerow(Y_test)
     wtr.writerow(P_test)
+
 """sns.heatmap(data.corr(), xticklabels=data.columns, yticklabels=data.columns)
 plt.show()"""
 
