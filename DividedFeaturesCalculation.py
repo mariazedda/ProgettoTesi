@@ -80,6 +80,8 @@ else:
 count = 0
 for p in range(1, 6):
     for s in range(1, 3):
+        if p == 4:
+            s = 1
         with open(fileName + 'P' + str(p) + path + str(s) + '.csv', 'w', newline='') as f:
             # with open(fileName + '.csv', 'a', newline='') as f:
             wtr = csv.writer(f)
@@ -160,6 +162,9 @@ for p in range(1, 6):
 
                     if len(clm) == len(row):
                         wtr.writerow(row)
+
+
+
 
 """for p in range(1, 6):
     for s in range(1, 3):

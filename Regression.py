@@ -1,7 +1,10 @@
+import csv
+
 import pandas as pd
 import warnings
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, max_error, mean_absolute_error, mean_squared_error
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import pearsonr
 
@@ -11,10 +14,8 @@ sport = input("sport : c/f \n")
 
 if sport == "c":
     stringPath = "AverageTesterTrainingFile/calcio"
-    fileName = "featuresCalcioNormalized.csv"
 else:
     stringPath = "AverageTesterTrainingFile/futsal"
-    fileName = "featuresFutsalNormalized.csv"
 
 P_test = []
 Y_test = []
@@ -31,10 +32,6 @@ for p in range(1, 6):
     Y_temp = test['Score']  # memorizzo la variabile dipendente per il test
 
     Y_test.extend(Y_temp)
-    """data = pd.read_csv(fileName)
-    Y = data["Score"]
-    X = data.drop('Score', axis=1)
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.5, shuffle=False)"""
 
     # standardizzo le variabili dipendenti di train e di test
     ss = StandardScaler()
@@ -75,8 +72,8 @@ print("R2: ", r2_score(Y_test, P_test))
 print("Errore Massimo: ", max_error(Y_test, P_test))
 print("Correlazione tra previsti e effettivi:", pearsonr(Y_test, P_test)[0])
 
-"""with open('2GroupExperiment\\Experiment3Futsal.csv', 'a') as f:
+with open('1GroupExperiment\\Experiment2.2Futsal.csv', 'a') as f:
     wtr = csv.writer(f)
-    wtr.writerow(Y_Total_Mean)
-    wtr.writerow(P_Total_Mean)"""
+    wtr.writerow(Y_test)
+    wtr.writerow(P_test)
 
