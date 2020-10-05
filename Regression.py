@@ -10,10 +10,10 @@ warnings.filterwarnings('ignore')
 sport = input("sport : c/f \n")
 
 if sport == "c":
-    stringPath = "TesterTrainingFile\\calcio"
+    stringPath = "AverageTesterTrainingFile/calcio"
     fileName = "featuresCalcioNormalized.csv"
 else:
-    stringPath = "TesterTrainingFile\\futsal"
+    stringPath = "AverageTesterTrainingFile/futsal"
     fileName = "featuresFutsalNormalized.csv"
 
 P_test = []
@@ -21,8 +21,8 @@ Y_test = []
 res = []
 
 for p in range(1, 6):
-    train = pd.read_csv(stringPath + "\\P" + str(p) + "\\training.csv")
-    test = pd.read_csv(stringPath + "\\P" + str(p) + "\\test.csv")
+    train = pd.read_csv(stringPath + "/P" + str(p) + "/training.csv")
+    test = pd.read_csv(stringPath + "/P" + str(p) + "/test.csv")
 
     Y_train = train['Score']  # memorizzo la variabile dipendente per il train
     X_train = train.drop('Score', axis=1)  # memorizzo le variabili indipendenti per il train
@@ -59,13 +59,13 @@ for p in range(1, 6):
     print("MAE: ", mean_absolute_error(Y_temp, P_temp))
 
      # media delle differenze al quadrato tra previsioni e target.
-    print("MAE: ", mean_squared_error(Y_temp, P_temp))
+    print("MSE: ", mean_squared_error(Y_temp, P_temp))
 
     # proporzione tra variabilità e correttezza dei dati del modello.
-    print("MAE: ", r2_score(Y_temp, P_temp))
+    print("R2: ", r2_score(Y_temp, P_temp))
 
     # misura di quanto i valori stimati si discostano dai valori reali
-    print("MAE: ", max_error(Y_temp, P_temp))
+    print("MAXERROR: ", max_error(Y_temp, P_temp))
 
 print("\n Totale:\n ")
 

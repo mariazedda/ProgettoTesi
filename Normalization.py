@@ -35,7 +35,7 @@ else:
     fileNorm = 'featuresFutsalNormalized'
 
 for p in range(1, 6):
-    data = pd.read_csv(fileName + 'P' + str(p) + '.csv', header=0, low_memory=False, index_col=0)
+    # for s in range(1, 3):
     data = pd.read_csv(fileName + 'P' + str(p) + '.csv', header=0, low_memory=False, index_col=0)
     clm1 = data.columns.values
 
@@ -70,7 +70,7 @@ for p in range(1, 6):
             if isinstance(matrix2[k][i], str):
                 matrix2[k][i] = float(matrix2[k][i])
 
-        # Normalizzazione dei dati
+    # Normalizzazione dei dati
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaler = scaler.fit(matrix2)
     matrixFin = scaler.transform(matrix2)
@@ -79,10 +79,9 @@ for p in range(1, 6):
         for k in range(0, len(matrixFin[0])):
             matrixFin[i][k] = matrixFin[i][k] * 1
 
-
         # Creazione del dataset Normalizzato
-    with open(fileNorm + 'P' + str(p) + '.csv', 'w', newline='') as f:
-    # with open(fileNorm + '.csv', 'w', newline='') as f:
+    with open(fileName + 'P' + str(p) + '.csv', 'w', newline='') as f:
+        # with open(fileNorm + '.csv', 'w', newline='') as f:
         wtr = csv.writer(f)
         wtr.writerow(clm1)
         for i in range(0, len(matrix2)):
@@ -91,3 +90,5 @@ for p in range(1, 6):
             if i > 0:
                 wtr.writerow(rowStamp)
             rowStamp = []
+
+

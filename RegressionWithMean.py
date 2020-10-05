@@ -15,34 +15,43 @@ warnings.filterwarnings('ignore')
 sport = input("sport : c/f \n")
 
 if sport == "c":
-    stringPath = "TesterTrainingFile\\calcio"
-    fileName = "featuresCalcioNormalized.csv"
+    stringPath = "DividedTestTrainingFile/calcio"
+    filePath = 'PredictionAverage/calcio'
 else:
-    stringPath = "TesterTrainingFile\\futsal"
-    fileName = "featuresFutsalNormalized.csv"
+    stringPath = "DividedTestTrainingFile/futsal"
+    filePath = 'PredictionAverage/futsal'
 
 P_test = []
 Y_test = []
+
 Y_Total_Mean = []
 P_Total_Mean = []
+
 res = []
 """
     File utilizzato per gli esperimenti 1.2 e 3.2
 """
 for p in range(1, 6):
     i = 0
-    Y_Mean = []
-    P_Mean = []
-    train = pd.read_csv(stringPath + "\\P" + str(p) + "\\training.csv")
-    test = pd.read_csv(stringPath + "\\P" + str(p) + "\\test.csv")
+    Y_Mean1 = []
+    Y_Mean2 = []
+    P_Mean1 = []
+    P_Mean2 = []
+    train = pd.read_csv(stringPath + "/P" + str(p) + "/training.csv")
+    test1 = pd.read_csv(stringPath + "/P" + str(p) + "/test1.csv")
+    test2 = pd.read_csv(stringPath + "/P" + str(p) + "/test2.csv")
 
     Y_train = train['Score']  # memorizzo la variabile dipendente per il train
     X_train = train.drop('Score', axis=1)  # memorizzo le variabili indipendenti per il train
     
-    X_test = test.drop('Score', axis=1)  # memorizzo le variabili idipendenti per il test
-    Y_temp = test['Score']  # memorizzo la variabile dipendente per il test
+    X_test1 = test1.drop('Score', axis=1)  # memorizzo le variabili idipendenti per il test
+    Y_temp1 = test1['Score']  # memorizzo la variabile dipendente per il test
 
-    Y_test.extend(Y_temp)
+    X_test2 = test2.drop('Score', axis=1)  # memorizzo le variabili idipendenti per il test
+    Y_temp2 = test2['Score']  # memorizzo la variabile dipendente per il test
+
+    Y_test.extend(Y_temp1)
+    Y_test.extend(Y_temp2)
     """data = pd.read_csv(fileName)
 Y = data["Score"]
 X = data.drop('Score', axis=1)
@@ -52,7 +61,9 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.5, shuffle
     # standardizzo le variabili dipendenti di train e di test
     ss = StandardScaler()
     X_train_std = ss.fit_transform(X_train)
-    X_test_std = ss.transform(X_test)
+    X_test_std1 = ss.transform(X_test1)
+    X_test_std2 = ss.transform(X_test2)
+
 
     # imposto il modello
     model = LinearRegression()
@@ -61,12 +72,14 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.5, shuffle
     model.fit(X_train_std, Y_train)
 
     # Predizione sui dati di test
-    P_temp = model.predict(X_test_std)
+    P_temp1 = model.predict(X_test_std1)
+    P_temp2 = model.predict(X_test_std2)
 
-    P_test.extend(P_temp)
-    y_int = mean(Y_temp).astype(int)
+    P_test.extend(P_temp1)
+    P_test.extend(P_temp2)
+    # y_int = mean(Y_temp).astype(int)
 
-    if not mean(Y_temp) - y_int == 0:
+    """if not mean(Y_temp) - y_int == 0:
         c = Y_temp.iloc[0]
         for x in range(0, Y_temp.shape[0]):
             if Y_temp.iloc[x] != c:
@@ -106,27 +119,46 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.5, shuffle
         max1 = max_error(Y_Mean_1, P_Mean_1)
         max2 = max_error(Y_Mean_2, P_Mean_2)
         print("MAX ERROR:", (max1 + max2)/2)
-    else:
-        Y_Mean.append(mean(Y_temp))
-        P_Mean.append(mean(P_temp))
-        Y_Total_Mean.extend(Y_Mean)
-        P_Total_Mean.extend(P_Mean)
+    else:"""
+    Y_Mean1.append(mean(Y_temp1))
+    Y_Mean2.append(mean(Y_temp2))
+    P_Mean1.append(mean(P_temp1))
+    P_Mean2.append(mean(P_temp2))
+    Y_Total_Mean.extend(Y_Mean1)
+    Y_Total_Mean.extend(Y_Mean2)
+    P_Total_Mean.extend(P_Mean1)
+    P_Total_Mean.extend(P_Mean2)
 
-        # esprime quanto bene il modello descrive il dataset utilizzato
-        print("\nRisultati P" + str(p) + ":\n")
+    # esprime quanto bene il modello descrive il dataset utilizzato
+    print("\nRisultati P" + str(p) + ":\n")
 
-        # media delle differenze assolute tra previsioni e target.
-        print("MAE: ", mean_absolute_error(Y_Mean, P_Mean))
+    # media delle differenze assolute tra previsioni e target.
+    print("MAE 1 esercizio: ", mean_absolute_error(Y_Mean1, P_Mean1))
+    print("MAE 2 esercizio: ", mean_absolute_error(Y_Mean2, P_Mean2))
 
-        # media delle differenze al quadrato tra previsioni e target.
-        print("MSE: ", mean_squared_error(Y_Mean, P_Mean))
+    # media delle differenze al quadrato tra previsioni e target.
+    print("MSE 1 esercizio:: ", mean_squared_error(Y_Mean1, P_Mean1))
+    print("MSE 2 esercizio:: ", mean_squared_error(Y_Mean2, P_Mean2))
 
-        # proporzione tra variabilità e correttezza dei dati del modello.
-        print("R2: ", r2_score(Y_Mean, P_Mean))
+    # proporzione tra variabilità e correttezza dei dati del modello.
+    print("R2 1 esercizio: ", r2_score(Y_Mean1, P_Mean1))
+    print("R2 2 esercizio: ", r2_score(Y_Mean2, P_Mean2))
 
-        # misura di quanto i valori stimati si discostano dai valori reali
-        print("Max Error: ", max_error(Y_Mean, P_Mean))
+    # misura di quanto i valori stimati si discostano dai valori reali
+    print("Max Error 1 esercizio:  ", max_error(Y_Mean1, P_Mean1))
+    print("Max Error 2 esercizio: ", max_error(Y_Mean2, P_Mean2))
 
+
+    """for s in range(1, 3):
+        with open(filePath + '/Exercise' + str(s) + '.csv', 'a') as f:
+            wtr = csv.writer(f)
+            wtr.writerow(str(p))
+            if s == 1:
+                wtr.writerow(Y_Mean1)
+                wtr.writerow(P_Mean1)
+            else:
+                wtr.writerow(Y_Mean2)
+                wtr.writerow(P_Mean2)"""
 
 print("\n Totale:\n ")
 
@@ -137,10 +169,6 @@ print("Errore Massimo: ", max_error(Y_Total_Mean, P_Total_Mean))
 print("Correlazione tra previsti e effettivi:", pearsonr(Y_Total_Mean, P_Total_Mean)[0])
 
 # grafico:
-"""with open('2GroupExperiment\\Experiment3Futsal.csv', 'a') as f:
-    wtr = csv.writer(f)
-    wtr.writerow(Y_Total_Mean)
-    wtr.writerow(P_Total_Mean)"""
 
 """# grafico dei residui: residui in ordinate e valori di X nelle ascisse
 res = np.array(Y_test) - np.array(P_test)
