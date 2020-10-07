@@ -15,10 +15,10 @@ sport = input("sport : c/f \n")
 
 if sport == "c":
     stringPath = "TestTrainingFile/calcio"
-    filePath = '1GroupExperiment/Experiment1.3Calcio'
+    filePath = '1GroupExperiment/Experiment4Calcio'
 else:
     stringPath = "TestTrainingFile/futsal"
-    filePath = '1GroupExperiment/Experiment1.3Futsal'
+    filePath = '1GroupExperiment/Experiment4Futsal'
 
 P_test = []
 Y_test = []
@@ -29,7 +29,7 @@ P_Total_Mean = []
     File utilizzato per gli esperimenti 1.2 e 3.2
 """
 for p in range(1, 6):
-    """if p != 4:
+    if p != 4:
         i = 0
         Y_Mean1 = []
         Y_Mean2 = []
@@ -99,7 +99,7 @@ for p in range(1, 6):
         print("Max Error 1 esercizio:  ", max_error(Y_Mean1, P_Mean1))
         print("Max Error 2 esercizio: ", max_error(Y_Mean2, P_Mean2))
 
-        for s in range(1, 3):
+        """for s in range(1, 3):
             with open(filePath + '.csv', 'a') as f:
                 wtr = csv.writer(f)
                 wtr.writerow(str(p))
@@ -110,86 +110,86 @@ for p in range(1, 6):
                 else:
                     wtr.writerow("E2")
                     wtr.writerow(Y_Mean2)
-                    wtr.writerow(P_Mean2)
+                    wtr.writerow(P_Mean2)"""
 
-    else:"""
-    i = 0
-    Y_Mean = []
-    P_Mean = []
-    train = pd.read_csv(stringPath + "/P" + str(p) + "/training.csv")
-    test = pd.read_csv(stringPath + "/P" + str(p) + "/test.csv")
+    else:
+        i = 0
+        Y_Mean = []
+        P_Mean = []
+        train = pd.read_csv(stringPath + "/P" + str(p) + "/training.csv")
+        test = pd.read_csv(stringPath + "/P" + str(p) + "/test.csv")
 
-    Y_train = train['Score']  # memorizzo la variabile dipendente per il train
-    X_train = train.drop('Score', axis=1)  # memorizzo le variabili indipendenti per il train
+        Y_train = train['Score']  # memorizzo la variabile dipendente per il train
+        X_train = train.drop('Score', axis=1)  # memorizzo le variabili indipendenti per il train
 
-    X_test = test.drop('Score', axis=1)  # memorizzo le variabili idipendenti per il test
-    Y_temp = test['Score']  # memorizzo la variabile dipendente per il test
+        X_test = test.drop('Score', axis=1)  # memorizzo le variabili idipendenti per il test
+        Y_temp = test['Score']  # memorizzo la variabile dipendente per il test
 
-    Y_test.extend(Y_temp)
+        Y_test.extend(Y_temp)
 
-    # standardizzo le variabili dipendenti di train e di test
-    ss = StandardScaler()
-    X_train_std = ss.fit_transform(X_train)
-    X_test_std = ss.transform(X_test)
+        # standardizzo le variabili dipendenti di train e di test
+        ss = StandardScaler()
+        X_train_std = ss.fit_transform(X_train)
+        X_test_std = ss.transform(X_test)
 
-    # imposto il modello
-    model = LinearRegression()
+        # imposto il modello
+        model = LinearRegression()
 
-    # Addestro il classificatore con i dati di training
-    model.fit(X_train_std, Y_train)
+        # Addestro il classificatore con i dati di training
+        model.fit(X_train_std, Y_train)
 
-    # Predizione sui dati di test
-    P_temp = model.predict(X_test_std)
+        # Predizione sui dati di test
+        P_temp = model.predict(X_test_std)
 
-    P_test.extend(P_temp)
+        P_test.extend(P_temp)
 
-    Y_Mean.append(mean(Y_temp))
+        Y_Mean.append(mean(Y_temp))
 
-    P_Mean.append(mean(P_temp))
+        P_Mean.append(mean(P_temp))
 
-    Y_Total_Mean.extend(Y_Mean)
+        Y_Total_Mean.extend(Y_Mean)
 
-    P_Total_Mean.extend(P_Mean)
+        P_Total_Mean.extend(P_Mean)
 
-    """if not mean(Y_temp) - y_int == 0:
-        c = Y_temp.iloc[0]
-        for x in range(0, Y_temp.shape[0]):
-            if Y_temp.iloc[x] != c:
-                i = x
-                break
+        """if not mean(Y_temp) - y_int == 0:
+            c = Y_temp.iloc[0]
+            for x in range(0, Y_temp.shape[0]):
+                if Y_temp.iloc[x] != c:
+                    i = x
+                    break
+    
+        if i != 0:
+            t = i-1
+            Y_Mean_1 = [mean(Y_temp[:i])]
+            Y_Mean_2 = [mean(Y_temp[i+1:])]
+            P_Mean_1 = [mean(P_temp[:i])]
+            P_Mean_2 = [mean(P_temp[i+1:])]
+            Y_Total_Mean.extend(Y_Mean_1)
+            Y_Total_Mean.extend(Y_Mean_2)
+            P_Total_Mean.extend(P_Mean_1)
+            P_Total_Mean.extend(P_Mean_2)"""
 
-    if i != 0:
-        t = i-1
-        Y_Mean_1 = [mean(Y_temp[:i])]
-        Y_Mean_2 = [mean(Y_temp[i+1:])]
-        P_Mean_1 = [mean(P_temp[:i])]
-        P_Mean_2 = [mean(P_temp[i+1:])]
-        Y_Total_Mean.extend(Y_Mean_1)
-        Y_Total_Mean.extend(Y_Mean_2)
-        P_Total_Mean.extend(P_Mean_1)
-        P_Total_Mean.extend(P_Mean_2)"""
+        # esprime quanto bene il modello descrive il dataset utilizzato
+        print("\nRisultati P" + str(p) + ":\n")
 
-    # esprime quanto bene il modello descrive il dataset utilizzato
-    print("\nRisultati P" + str(p) + ":\n")
+        # media delle differenze assolute tra previsioni e target.
+        print("MAE: ", mean_absolute_error(Y_Mean, P_Mean))
 
-    # media delle differenze assolute tra previsioni e target.
-    print("MAE: ", mean_absolute_error(Y_Mean, P_Mean))
+        # media delle differenze al quadrato tra previsioni e target.
+        print("MSE: ", mean_squared_error(Y_Mean, P_Mean))
 
-    # media delle differenze al quadrato tra previsioni e target.
-    print("MSE: ", mean_squared_error(Y_Mean, P_Mean))
+        # proporzione tra variabilità e correttezza dei dati del modello.
+        print("R2: ", r2_score(Y_Mean, P_Mean))
 
-    # proporzione tra variabilità e correttezza dei dati del modello.
-    print("R2: ", r2_score(Y_Mean, P_Mean))
+        # misura di quanto i valori stimati si discostano dai valori reali
+        print("Errore Massimo: ", max_error(Y_Mean, P_Mean))
 
-    # misura di quanto i valori stimati si discostano dai valori reali
-    print("Errore Massimo: ", max_error(Y_Mean, P_Mean))
-
-    with open(filePath + '.csv', 'a') as f:
-        wtr = csv.writer(f)
-        wtr.writerow(str(p))
-        wtr.writerow("E1")
-        wtr.writerow(Y_Mean)
-        wtr.writerow(P_Mean)
+        """with open(filePath + '.csv', 'a') as f:
+            wtr = csv.writer(f)
+            wtr.writerow(str(p))
+            wtr.writerow("E1")
+            wtr.writerow(Y_Mean)
+            wtr.writerow(P_Mean)"""
 
 print("\n Totale:\n ")
 
