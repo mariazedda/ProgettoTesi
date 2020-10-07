@@ -54,7 +54,10 @@ activity = input("attività : y/n \n")
 quality = input("score : y/n \n")
 position = input("sensor position : y/n \n")
 athleteID = input("athlete ID : y/n \n")
+time = input("total time : y/n \n")
 
+if time == "y":
+    clm.append("Time")
 if activity == "y":
     clm.append("Activity")
 
@@ -70,11 +73,11 @@ if athleteID == "y":
 # Calcolo delle feature e scrittura sul file
 if sport == "c":
     stringPath = "data2/calcio"
-    fileName = 'DividedFeatures/calcio/'
+    fileName = 'Features/calcio/'
     path = '/Exercise'
 else:
     stringPath = "data2/futsal"
-    fileName = 'DividedFeatures/futsal/'
+    fileName = 'Features/futsal/'
     path = '/Exercise'
 
 count = 0
@@ -94,8 +97,9 @@ for p in range(1, 6):
                 stringPathFile = stringPath + "/p" + str(p) + "/s" + auxStr + ".txt"
 
                 waste = 0
-
-                for X in pd.read_csv(stringPathFile, sep="\t", header=None, chunksize=60):
+                data = pd.read_csv(stringPathFile, sep="\t", header=None, index_col=False)
+                for X in pd.read_csv(stringPathFile, sep="\t", header=None, chunksize=60, index_col=False,
+                                     low_memory=False):
                     if X[waste + 1].size < 60:
                         break
                     row = []
@@ -149,6 +153,14 @@ for p in range(1, 6):
                         row.extend(aux)
 
                         if i == X.shape[1] - 4:
+                            if time == "y":
+                                dataRow = data.shape[0]
+                                last = int(data.iloc[dataRow-1, 1])
+                                first = int(data.iloc[0, 1])
+                                total = (last - first) / 1000000
+                                minutes = int(total / 60)
+                                seconds = int(total - minutes * 60)
+                                row.extend(([minutes + seconds / 100]))
                             if activity == "y":
                                 row.extend([max(X[i + 1])])  # Activity
                             if quality == "y":
@@ -162,8 +174,6 @@ for p in range(1, 6):
 
                     if len(clm) == len(row):
                         wtr.writerow(row)
-
-
 
 
 """for p in range(1, 6):

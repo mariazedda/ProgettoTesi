@@ -54,6 +54,10 @@ activity = input("attività : y/n \n")
 quality = input("score : y/n \n")
 position = input("sensor position : y/n \n")
 athleteID = input("athlete ID : y/n \n")
+time = input("total time : y/n \n")
+
+if time == "y":
+    clm.append("Time")
 
 if activity == "y":
     clm.append("Activity")
@@ -70,97 +74,103 @@ if athleteID == "y":
 # Calcolo delle feature e scrittura sul file
 if sport == "c":
     stringPath = "data2/calcio"
-    fileName = 'featuresCalcio'
+    fileName = 'Features/calcio/'
 else:
     stringPath = "data2/futsal"
-    fileName = 'featuresFutsal'
+    fileName = 'Features/futsal/'
 count = 0
 for p in range(1, 6):
-    # with open(fileName + 'P' + str(p) + '.csv', 'w', newline='') as f:
-    with open(fileName + '.csv', 'a', newline='') as f:
+    with open(fileName + 'P' + str(p) + "/Exercise1.csv", 'w', newline='') as f:
         wtr = csv.writer(f)
         wtr.writerow(clm)
         """if count == 0:
             count += 1"""
-        #if p == 1:
-        for s in range(1, 12):
-            if s != 2:
-                auxStr = ""
-                if s < 10:
-                    auxStr = "0"
-                    auxStr += str(s)
-                    stringPathFile = stringPath + "/p" + str(p) + "/s" + auxStr + ".txt"
+        # if p == 1:
+        for s in range(1, 2):
+            auxStr = ""
+            if s < 10:
+                auxStr = "0"
+                auxStr += str(s)
+                stringPathFile = stringPath + "/p" + str(p) + "/s" + auxStr + ".txt"
 
-                    waste = 0
+                waste = 0
+                data = pd.read_csv(stringPathFile, sep="\t", header=None, index_col=False)
+                for X in pd.read_csv(stringPathFile, sep="\t", header=None, chunksize=60, index_col=False,
+                                     low_memory=False):
+                    if X[waste + 1].size < 60:
+                        break
+                    row = []
 
-                    for X in pd.read_csv(stringPathFile, sep="\t", header=None, chunksize=60, index_col=False,
-                                         low_memory=False):
-                        if X[waste + 1].size < 60:
-                            break
-                        row = []
+                    for i in range(2, X.shape[1] - 3):
+                        aux = []
+                        # Valore massimo
+                        aux.append(max(X[i]))
 
-                        for i in range(2, X.shape[1] - 3):
-                            aux = []
-                            # Valore massimo
-                            aux.append(max(X[i]))
+                        # Valore minimo
+                        aux.append(min(X[i]))
 
-                            # Valore minimo
-                            aux.append(min(X[i]))
+                        # Valore medio
+                        aux.append(mean(X[i]))
 
-                            # Valore medio
-                            aux.append(mean(X[i]))
+                        # Varianza
+                        aux.append(var(X[i], ddof=1))
 
-                            # Varianza
-                            aux.append(var(X[i], ddof=1))
+                        # Assimetria
+                        aux.append(skew(X[i]))
 
-                            # Assimetria
-                            aux.append(skew(X[i]))
+                        # Curtosi
+                        aux.append(kurtosis(X[i]))
 
-                            # Curtosi
-                            aux.append(kurtosis(X[i]))
+                        # Autocorrelazione
+                        acf = correlate(X[i], X[i], 'full')[-len(X[0]):]
+                        aut = []
+                        for j in range(acf.size):
+                            if j % 8 == 0:
+                                aut.append(acf[j])
 
-                            # Autocorrelazione
-                            acf = correlate(X[i], X[i], 'full')[-len(X[0]):]
-                            aut = []
-                            for j in range(acf.size):
-                                if j % 8 == 0:
-                                    aut.append(acf[j])
+                        while len(aut) < 10:
+                            tmp = acf[X[i].size - (10 - len(aut))]
+                            aut.append(tmp)
+                        aux.extend(aut)
 
-                            while len(aut) < 10:
-                                tmp = acf[X[i].size - (10 - len(aut))]
-                                aut.append(tmp)
-                            aux.extend(aut)
+                        # Trasformata discreta di Fourier
+                        fourier = fft.rfft(X[i] - X[i].mean())
+                        freq = fft.rfftfreq(X[i].size, d=1. / 15)
+                        inflection = diff(sign(diff(fourier)))
+                        peaks = (inflection < 0).nonzero()[0] + 1
 
-                            # Trasformata discreta di Fourier
-                            fourier = fft.rfft(X[i] - X[i].mean())
-                            freq = fft.rfftfreq(X[i].size, d=1. / 15)
-                            inflection = diff(sign(diff(fourier)))
-                            peaks = (inflection < 0).nonzero()[0] + 1
+                        # primi 5 picchi trasformata di fourier
+                        peak = fourier[peaks]
 
-                            # primi 5 picchi trasformata di fourier
-                            peak = fourier[peaks]
+                        # Frequenza dei picchi della trasformata discreta di fourier
+                        signal_freq = freq[peaks]
 
-                            # Frequenza dei picchi della trasformata discreta di fourier
-                            signal_freq = freq[peaks]
+                        aux.extend(peak[:5])
+                        aux.extend(signal_freq[:5])
+                        row.extend(aux)
 
-                            aux.extend(peak[:5])
-                            aux.extend(signal_freq[:5])
-                            row.extend(aux)
+                        if i == X.shape[1] - 4:
+                            if time == "y":
+                                dataRow = data.shape[0]
+                                last = int(data.iloc[dataRow-1, 1])
+                                first = int(data.iloc[0, 1])
+                                total = (last - first) / 1000000
+                                minutes = int(total / 60)
+                                seconds = int(total - minutes * 60)
+                                row.extend(([minutes + seconds / 100]))  # Time
+                            if activity == "y":
+                                row.extend([max(X[i + 1])])  # Activity
+                            if quality == "y":
+                                row.extend([max(X[i + 2])])  # Score
+                            if position == "y":
+                                row.extend([max(X[i + 3])])  # Position
+                            if athleteID == "y":
+                                row.extend(["p" + str(p) + ""])  # Athlete
 
-                            if i == X.shape[1] - 4:
-                                if activity == "y":
-                                    row.extend([max(X[i + 1])])  # Activity
-                                if quality == "y":
-                                    row.extend([max(X[i + 2])])  # Score
-                                if position == "y":
-                                    row.extend([max(X[i + 3])])  # Position
-                                if athleteID == "y":
-                                    row.extend(["p" + str(p) + ""])  # Athlete
+                        waste = i
 
-                            waste = i
-
-                        if len(clm) == len(row):
-                            wtr.writerow(row)
+                    if len(clm) == len(row):
+                        wtr.writerow(row)
 
             """else:
                 if s != 2:
@@ -242,13 +252,13 @@ for p in range(1, 6):
 
 
 """for p in range(1, 6):
-    data = pd.read_csv(fileName + "P" + str(p) + ".csv", index_col=0)
+    data = pd.read_csv(fileName + 'P' + str(p) + '/Exercise1.csv', index_col=0)
     data = data[data['Activity'] == "1000 metri"]
     data.drop('Activity', axis=1, inplace=True)
-    data.to_csv(fileName + 'P' + str(p) + '.csv')"""
+    data.to_csv(fileName + 'P' + str(p) + '/Exercise1.csv')"""
 
-data = pd.read_csv(fileName + ".csv")
+"""data = pd.read_csv(fileName + ".csv")
 data = data[data['Activity'] == "1000 metri"]
 data.drop('Activity', axis=1, inplace=True)
-data.to_csv(fileName + '.csv')
+data.to_csv(fileName + '.csv')"""
 

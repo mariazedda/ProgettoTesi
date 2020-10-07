@@ -14,11 +14,11 @@ warnings.filterwarnings('ignore')
 sport = input("sport : c/f \n")
 
 if sport == "c":
-    stringPath = "DividedTestTrainingFile\\calcio"
-    filePath = '1GroupExperiment\\Experiment1.2Calcio'
+    stringPath = "TestTrainingFile/calcio"
+    filePath = '1GroupExperiment/Experiment1.3Calcio'
 else:
-    stringPath = "DividedTestTrainingFile\\futsal"
-    filePath = '1GroupExperiment1.2Futsal'
+    stringPath = "TestTrainingFile/futsal"
+    filePath = '1GroupExperiment/Experiment1.3Futsal'
 
 P_test = []
 Y_test = []
@@ -35,10 +35,10 @@ for p in range(1, 6):
         Y_Mean2 = []
         P_Mean1 = []
         P_Mean2 = []
-        print(stringPath + "\\P" + str(p) + "\\training.csv")
-        train = pd.read_csv(stringPath + "\\P" + str(p) + "\\training.csv")
-        test1 = pd.read_csv(stringPath + "\\P" + str(p) + "\\test1.csv")
-        test2 = pd.read_csv(stringPath + "\\P" + str(p) + "\\test2.csv")
+
+        train = pd.read_csv(stringPath + "/P" + str(p) + "/training.csv")
+        test1 = pd.read_csv(stringPath + "/P" + str(p) + "/test1.csv")
+        test2 = pd.read_csv(stringPath + "/P" + str(p) + "/test2.csv")
 
         Y_train = train['Score']  # memorizzo la variabile dipendente per il train
         X_train = train.drop('Score', axis=1)  # memorizzo le variabili indipendenti per il train
@@ -115,11 +115,9 @@ for p in range(1, 6):
     else:"""
     i = 0
     Y_Mean = []
-    Y_Mean2 = []
     P_Mean = []
-    P_Mean2 = []
-    train = pd.read_csv(stringPath + "\\P" + str(p) + "\\training.csv")
-    test = pd.read_csv(stringPath + "\\P" + str(p) + "\\test.csv")
+    train = pd.read_csv(stringPath + "/P" + str(p) + "/training.csv")
+    test = pd.read_csv(stringPath + "/P" + str(p) + "/test.csv")
 
     Y_train = train['Score']  # memorizzo la variabile dipendente per il train
     X_train = train.drop('Score', axis=1)  # memorizzo le variabili indipendenti per il train
@@ -145,6 +143,14 @@ for p in range(1, 6):
 
     P_test.extend(P_temp)
 
+    Y_Mean.append(mean(Y_temp))
+
+    P_Mean.append(mean(P_temp))
+
+    Y_Total_Mean.extend(Y_Mean)
+
+    P_Total_Mean.extend(P_Mean)
+
     """if not mean(Y_temp) - y_int == 0:
         c = Y_temp.iloc[0]
         for x in range(0, Y_temp.shape[0]):
@@ -161,54 +167,22 @@ for p in range(1, 6):
         Y_Total_Mean.extend(Y_Mean_1)
         Y_Total_Mean.extend(Y_Mean_2)
         P_Total_Mean.extend(P_Mean_1)
-        P_Total_Mean.extend(P_Mean_2)
-
-        # esprime quanto bene il modello descrive il dataset utilizzato
-        print("\nRisultati P" + str(p) + ":\n")
-
-        # media delle differenze assolute tra previsioni e target.
-        mae1 = mean_absolute_error(Y_Mean_1, P_Mean_1)
-        mae2 = mean_absolute_error(Y_Mean_2, P_Mean_2)
-        print("MAE: ", (mae1 + mae2)/2)
-
-        # media delle differenze al quadrato tra previsioni e target.
-        mse1 = mean_squared_error(Y_Mean_1, P_Mean_1)
-        mse2 = mean_squared_error(Y_Mean_2, P_Mean_2)
-        print("MSE: ", (mse1 + mse2)/2)
-
-        # proporzione tra variabilità e correttezza dei dati del modello.
-        r1 = r2_score(Y_Mean_1, P_Mean_1)
-        r2 = r2_score(Y_Mean_2, P_Mean_2)
-        print("R2: ", (r1 + r2)/2)
-
-        # misura di quanto i valori stimati si discostano dai valori reali
-        max1 = max_error(Y_Mean_1, P_Mean_1)
-        max2 = max_error(Y_Mean_2, P_Mean_2)
-        print("MAX ERROR:", (max1 + max2)/2)
-    else:"""
-    Y_Mean.append(mean(Y_temp))
-
-    P_Mean.append(mean(P_temp))
-
-    Y_Total_Mean.extend(Y_Mean)
-
-    P_Total_Mean.extend(P_Mean)
-
+        P_Total_Mean.extend(P_Mean_2)"""
 
     # esprime quanto bene il modello descrive il dataset utilizzato
     print("\nRisultati P" + str(p) + ":\n")
 
     # media delle differenze assolute tra previsioni e target.
-    print("MAE 1 esercizio: ", mean_absolute_error(Y_Mean, P_Mean))
+    print("MAE: ", mean_absolute_error(Y_Mean, P_Mean))
 
     # media delle differenze al quadrato tra previsioni e target.
-    print("MSE 1 esercizio:: ", mean_squared_error(Y_Mean, P_Mean))
+    print("MSE: ", mean_squared_error(Y_Mean, P_Mean))
 
     # proporzione tra variabilità e correttezza dei dati del modello.
-    print("R2 1 esercizio: ", r2_score(Y_Mean, P_Mean))
+    print("R2: ", r2_score(Y_Mean, P_Mean))
 
     # misura di quanto i valori stimati si discostano dai valori reali
-    print("Max Error 1 esercizio:  ", max_error(Y_Mean, P_Mean))
+    print("Errore Massimo: ", max_error(Y_Mean, P_Mean))
 
     with open(filePath + '.csv', 'a') as f:
         wtr = csv.writer(f)
