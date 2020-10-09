@@ -23,19 +23,20 @@ if quality == "y":
 # Calcolo delle feature e scrittura sul file
 if sport == "c":
     stringPath = "data2/calcio"
-    fileName = 'TimeFeatures/calcio/'
+    fileName = 'Features/calcio/'
     path = '/Exercise'
 else:
     stringPath = "data2/futsal"
-    fileName = 'TimeFeatures/futsal/'
+    fileName = 'Features/futsal/'
     path = '/Exercise'
 
-count = 0
 for p in range(1, 6):
-    for s in range(1, 2):
+    count = 0
+    for s in range(3, 6):
+        count += 1
         #if p == 4:
          #   s = 1
-        with open(fileName + 'P' + str(p) + path + str(s) + '.csv', 'w', newline='') as f:
+        with open(fileName + 'P' + str(p) + path + str(count) + '.csv', 'w', newline='') as f:
             wtr = csv.writer(f)
             wtr.writerow(clm)
 

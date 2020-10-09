@@ -80,12 +80,13 @@ else:
     fileName = 'Features/futsal/'
     path = '/Exercise'
 
-count = 0
 for p in range(1, 6):
-    for s in range(3, 12):
+    count = 0
+    for s in range(3, 6):
+        count += 1
         #if p == 4:
         #    s = 1
-        with open(fileName + 'P' + str(p) + path + str(s) + '.csv', 'w', newline='') as f:
+        with open(fileName + 'P' + str(p) + path + str(count) + '.csv', 'w', newline='') as f:
             # with open(fileName + '.csv', 'a', newline='') as f:
             wtr = csv.writer(f)
             wtr.writerow(clm)
@@ -161,7 +162,6 @@ for p in range(1, 6):
                                 minutes = int(total / 60)
                                 seconds = int(total - minutes * 60)
                                 row.extend(([minutes + seconds / 100]))
-                                print((minutes + seconds)/100)
                             if activity == "y":
                                 row.extend([max(X[i + 1])])  # Activity
                             if quality == "y":

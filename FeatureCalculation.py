@@ -80,13 +80,13 @@ else:
     fileName = 'Features/futsal/'
 count = 0
 for p in range(1, 6):
-    with open(fileName + 'P' + str(p) + "/Exercise1.csv", 'w', newline='') as f:
+    with open(fileName + 'P' + str(p) + '/features.csv', 'w', newline='') as f:
         wtr = csv.writer(f)
         wtr.writerow(clm)
         """if count == 0:
             count += 1"""
         # if p == 1:
-        for s in range(3, 12):
+        for s in range(3, 6):
             auxStr = ""
             if s < 10:
                 auxStr = "0"
