@@ -86,7 +86,7 @@ for p in range(1, 6):
         """if count == 0:
             count += 1"""
         # if p == 1:
-        for s in range(1, 2):
+        for s in range(3, 12):
             auxStr = ""
             if s < 10:
                 auxStr = "0"
