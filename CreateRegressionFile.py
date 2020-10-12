@@ -19,26 +19,26 @@ for p in range(1, 6):
     count = 0
     for pTrain in range(1, 6):
         if pTrain == p:
-            for s in range(1, 4):
-                data = pd.read_csv(fileName + str(p) + '/Exercise' + str(s) + '.csv')
-                """data = pd.read_csv(fileName + str(p) + '/features.csv')
-            data.to_csv('TestTrainingFile/' + path + '/P' + str(p) + '/test.csv', index=False)"""
-                data.to_csv('TestTrainingFile/' + path + '/P' + str(p) + '/test' + str(s) + '.csv', index=False)
+            """for s in range(1, 4):
+                data = pd.read_csv(fileName + str(p) + '/Exercise' + str(s) + '.csv')"""
+            data = pd.read_csv(fileName + str(p) + '/features.csv')
+            data.to_csv('TestTrainingFile/' + path + '/P' + str(p) + '/test.csv', index=False)
+            # data.to_csv('TestTrainingFile/' + path + '/P' + str(p) + '/test' + str(s) + '.csv', index=False)
         else:
             #if pTrain != 4:
-            for s in range(1, 4):
-                data = pd.read_csv(fileName + str(pTrain) + '/Exercise' + str(s) + '.csv')
-                #data = pd.read_csv(fileName + str(pTrain) + '/features.csv')
-                if count == 0 or countP == 0:
-                    with open('TestTrainingFile/' + path + '/P' + str(p) + '/training.csv', 'w', newline='') as f:
-                        data.to_csv(f, index=False)
-                        if countP == 0:
-                            countP = 1
-                else:
-                    with open('TestTrainingFile/' + path + '/P' + str(p) + '/training.csv', 'a', newline='') as f:
-                        data.to_csv(f, header=False, index=False)
+            """for s in range(1, 4):
+                data = pd.read_csv(fileName + str(pTrain) + '/Exercise' + str(s) + '.csv')"""
+            data = pd.read_csv(fileName + str(pTrain) + '/features.csv')
+            if count == 0 or countP == 0:
+                with open('TestTrainingFile/' + path + '/P' + str(p) + '/training.csv', 'w', newline='') as f:
+                    data.to_csv(f, index=False)
+                    if countP == 0:
+                        countP = 1
+            else:
+                with open('TestTrainingFile/' + path + '/P' + str(p) + '/training.csv', 'a', newline='') as f:
+                    data.to_csv(f, header=False, index=False)
 
-                count += 1
+            count += 1
             """else:
                 data = pd.read_csv(fileName + str(pTrain) + '/Exercise1' + ".csv")
                 if count == 0 or countP == 0:

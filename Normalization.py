@@ -33,62 +33,62 @@ else:
     fileName = 'Features/futsal/P'
 
 for p in range(1, 6):
-    for s in range(1, 4):
-        data = pd.read_csv(fileName + str(p) + '/Exercise' + str(s) + '.csv', header=0, low_memory=False, index_col=0)
-        clm1 = data.columns.values
+    # for s in range(1, 4):
+    data = pd.read_csv(fileName + str(p) + '/features.csv', header=0, low_memory=False, index_col=0)
+    clm1 = data.columns.values
 
-        cls = data.Score
-        clx = data.Time
-        x = data.drop('Score', axis=1)
-        y = data.drop('Time', axis=1)
-        clm2 = x.columns.values
+    cls = data.Activity
+    # clx = data.Time
+    x = data.drop('Activity', axis=1)
+    # y = data.drop('Time', axis=1)
+    clm2 = x.columns.values
 
-        index = []
+    index = []
 
-        # Creazione matrice contenente i dati in un unico formato
-        matrix1 = []
-        for i in clm2:
-            con = 0
-            if "pks" not in i:
-                values = x[i].values
-            else:
-                values = absolute_value_complex_arr(x[i].values)
-            values = values.reshape((len(values), 1))
-            matrix1.append(values)
+    # Creazione matrice contenente i dati in un unico formato
+    matrix1 = []
+    for i in clm2:
+        con = 0
+        if "pks" not in i:
+            values = x[i].values
+        else:
+            values = absolute_value_complex_arr(x[i].values)
+        values = values.reshape((len(values), 1))
+        matrix1.append(values)
 
-        matrix2 = []
-        for i in range(0, len(matrix1[0])):
+    matrix2 = []
+    for i in range(0, len(matrix1[0])):
+        rowStamp = []
+        for k in range(0, len(matrix1)):
+            app = matrix1[k]
+            rowStamp.extend(app[i])
+        matrix2.append(rowStamp)
+
+    for k in range(0, len(matrix2)):
+        for i in range(0, len(matrix2[0])):
+            if isinstance(matrix2[k][i], str):
+                matrix2[k][i] = float(matrix2[k][i])
+
+    # Normalizzazione dei dati
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    scaler = scaler.fit(matrix2)
+    matrixFin = scaler.transform(matrix2)
+
+    for i in range(0, len(matrixFin)):
+        for k in range(0, len(matrixFin[0])):
+            matrixFin[i][k] = matrixFin[i][k] * 1
+
+        # Creazione del dataset Normalizzato
+    with open(fileName + str(p) + '/features.csv', 'w', newline='') as f:
+        # with open(fileNorm + '.csv', 'w', newline='') as f:
+        wtr = csv.writer(f)
+        wtr.writerow(clm1)
+        for i in range(0, len(matrix2)):
+            rowStamp.extend(matrixFin[i])
+            # rowStamp.append(clx.iloc[i])
+            rowStamp.append(cls.iloc[i])
+            if i > 0:
+                wtr.writerow(rowStamp)
             rowStamp = []
-            for k in range(0, len(matrix1)):
-                app = matrix1[k]
-                rowStamp.extend(app[i])
-            matrix2.append(rowStamp)
-
-        for k in range(0, len(matrix2)):
-            for i in range(0, len(matrix2[0])):
-                if isinstance(matrix2[k][i], str):
-                    matrix2[k][i] = float(matrix2[k][i])
-
-        # Normalizzazione dei dati
-        scaler = MinMaxScaler(feature_range=(0, 1))
-        scaler = scaler.fit(matrix2)
-        matrixFin = scaler.transform(matrix2)
-
-        for i in range(0, len(matrixFin)):
-            for k in range(0, len(matrixFin[0])):
-                matrixFin[i][k] = matrixFin[i][k] * 1
-
-            # Creazione del dataset Normalizzato
-        with open(fileName + str(p) + '/Exercise' + str(s) + '.csv', 'w', newline='') as f:
-            # with open(fileNorm + '.csv', 'w', newline='') as f:
-            wtr = csv.writer(f)
-            wtr.writerow(clm1)
-            for i in range(0, len(matrix2)):
-                rowStamp.extend(matrixFin[i])
-                rowStamp.append(clx.iloc[i])
-                rowStamp.append(cls.iloc[i])
-                if i > 0:
-                    wtr.writerow(rowStamp)
-                rowStamp = []
 
 

@@ -1,4 +1,7 @@
+import csv
+
 import pandas as pd
+import numpy as np
 
 from matplotlib import pyplot as plt
 
@@ -17,17 +20,28 @@ sport = input("sport : c/f \n")
 # Load the Diabetes dataset
 
 if sport == "c":
-    stringPath = "TestAndTraining/calcio"
+    stringPath = "TestTrainingFile/calcio"
     classi = ["1000 metri", "Navetta 10x5", "Scatto 30m", "Triplo salto in lungo"]
 
 else:
-    stringPath = "TestAndTraining/futsal"
+    stringPath = "TestTrainingFile/futsal"
     classi = ["1000 metri", "Navetta 5x10", "Scatto 10m", "Triplo salto in lungo"]
 
 p_test = []
 y_test = []
-
+w_test = []
+w_pred = []
+w_mod = []
+count = 0
 for p in range(1, 6):
+
+    new = pd.read_csv(path + '.csv')
+    test = new.Reali
+    pred = new.PredizioniFinestra
+
+    arr = precision_recall_fscore_support(test, pred, average='weighted')
+    print("\n\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
+
     train = pd.read_csv(stringPath + "/P" + str(p) + "/training.csv")
     test = pd.read_csv(stringPath + "/P" + str(p) + "/test.csv")
 
@@ -38,8 +52,10 @@ for p in range(1, 6):
 
     y_temp = test.Activity
 
+    if count == 0:
+        w_test.append("Reali")
     y_test.extend(y_temp)
-
+    w_test.extend(y_temp)
     # fit a model (Random Forest)
     # model = DecisionTreeClassifier(random_state=None)
     # model = RandomForestClassifier(random_state=None)
@@ -52,7 +68,12 @@ for p in range(1, 6):
 
     # Predizione sui dati di test
     p_temp = model.predict(X_test)
+    if count == 0:
+        w_pred.append("Predizioni")
+        w_mod.append("PredizioniFinestra")
     p_test.extend(p_temp)
+    w_pred.extend(p_temp)
+    w_mod.extend(p_temp)
 
     print("\nP" + str(p) + " :")
 
@@ -65,14 +86,26 @@ for p in range(1, 6):
     arr = precision_recall_fscore_support(y_temp, p_temp, average='weighted')
     print("\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
 
+    count = 1
+
 print("\n Totale: ")
 
 arr = precision_recall_fscore_support(y_test, p_test, average='weighted')
 print("\n\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
 
-# Confusion Matrix
+with open('Confronto.csv', 'a') as f:
+    wtr = csv.writer(f)
+    wtr.writerow(w_pred)
+    wtr.writerow(w_mod)
+    wtr.writerow(w_test)
+
+
+pd.read_csv('Confronto.csv', header=None).T.to_csv('ConfrontoFutsal.csv', header=False, index=False)
+
+
+"""# Confusion Matrix
 C = confusion_matrix(p_test, y_test)
 df_cm = pd.DataFrame(C, classi, classi)
 sns.set(font_scale=1.4)
 graphic = sns.heatmap(df_cm, annot=True, annot_kws={"size": 16}, cmap="YlGnBu", fmt='g')
-plt.show()
+plt.show()"""
