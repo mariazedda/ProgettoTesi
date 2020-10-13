@@ -21,26 +21,21 @@ sport = input("sport : c/f \n")
 
 if sport == "c":
     stringPath = "TestTrainingFile/calcio"
+    path = "calcio"
     classi = ["1000 metri", "Navetta 10x5", "Scatto 30m", "Triplo salto in lungo"]
 
 else:
     stringPath = "TestTrainingFile/futsal"
+    path = "futsal"
     classi = ["1000 metri", "Navetta 5x10", "Scatto 10m", "Triplo salto in lungo"]
 
 p_test = []
 y_test = []
-w_test = []
-w_pred = []
-w_mod = []
 count = 0
 for p in range(1, 6):
-
-    new = pd.read_csv(path + '.csv')
-    test = new.Reali
-    pred = new.PredizioniFinestra
-
-    arr = precision_recall_fscore_support(test, pred, average='weighted')
-    print("\n\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
+    w_test = []
+    w_pred = []
+    w_mod = []
 
     train = pd.read_csv(stringPath + "/P" + str(p) + "/training.csv")
     test = pd.read_csv(stringPath + "/P" + str(p) + "/test.csv")
@@ -52,8 +47,7 @@ for p in range(1, 6):
 
     y_temp = test.Activity
 
-    if count == 0:
-        w_test.append("Reali")
+    w_test.append("Reali")
     y_test.extend(y_temp)
     w_test.extend(y_temp)
     # fit a model (Random Forest)
@@ -68,9 +62,9 @@ for p in range(1, 6):
 
     # Predizione sui dati di test
     p_temp = model.predict(X_test)
-    if count == 0:
-        w_pred.append("Predizioni")
-        w_mod.append("PredizioniFinestra")
+
+    w_pred.append("Predizioni")
+    w_mod.append("PredizioniFinestra")
     p_test.extend(p_temp)
     w_pred.extend(p_temp)
     w_mod.extend(p_temp)
@@ -86,21 +80,21 @@ for p in range(1, 6):
     arr = precision_recall_fscore_support(y_temp, p_temp, average='weighted')
     print("\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
 
-    count = 1
+    """with open('Confronto/' + path + '/P' + str(p) + '/test.csv', 'w') as f:
+        wtr = csv.writer(f)
+        wtr.writerow(w_pred)
+        wtr.writerow(w_mod)
+        wtr.writerow(w_test)
+
+    pd.read_csv('Confronto/' + path + '/P' + str(p) + '/test.csv',
+                header=None).T.to_csv('Confronto/' + path + '/P' + str(p) + '/test.csv', header=False, index=False)
+    """
 
 print("\n Totale: ")
 
 arr = precision_recall_fscore_support(y_test, p_test, average='weighted')
 print("\n\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
 
-with open('Confronto.csv', 'a') as f:
-    wtr = csv.writer(f)
-    wtr.writerow(w_pred)
-    wtr.writerow(w_mod)
-    wtr.writerow(w_test)
-
-
-pd.read_csv('Confronto.csv', header=None).T.to_csv('ConfrontoFutsal.csv', header=False, index=False)
 
 
 """# Confusion Matrix
