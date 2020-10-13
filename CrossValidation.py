@@ -1,37 +1,31 @@
 import csv
 
 import pandas as pd
-import numpy as np
 
 from matplotlib import pyplot as plt
 
 from sklearn.metrics import confusion_matrix, precision_recall_fscore_support, accuracy_score
 import seaborn as sns
 import warnings
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
 from sklearn.linear_model import RidgeClassifier
 
 warnings.filterwarnings('ignore')
 
 sport = input("sport : c/f \n")
-# Load the Diabetes dataset
 
 if sport == "c":
-    stringPath = "TestTrainingFile/calcio"
+    stringPath = "TestTrainingFile\\calcio"
     path = "calcio"
     classi = ["1000 metri", "Navetta 10x5", "Scatto 30m", "Triplo salto in lungo"]
 
 else:
-    stringPath = "TestTrainingFile/futsal"
+    stringPath = "TestTrainingFile\\futsal"
     path = "futsal"
     classi = ["1000 metri", "Navetta 5x10", "Scatto 10m", "Triplo salto in lungo"]
 
 p_test = []
 y_test = []
-count = 0
+
 for p in range(1, 6):
     w_test = []
     w_pred = []
@@ -50,11 +44,7 @@ for p in range(1, 6):
     w_test.append("Reali")
     y_test.extend(y_temp)
     w_test.extend(y_temp)
-    # fit a model (Random Forest)
-    # model = DecisionTreeClassifier(random_state=None)
-    # model = RandomForestClassifier(random_state=None)
-    # model = GaussianNB()
-    # model = SVC(random_state=None)
+
     model = RidgeClassifier(random_state=None)
 
     # Addestro il classificatore con i dati di training
@@ -80,26 +70,24 @@ for p in range(1, 6):
     arr = precision_recall_fscore_support(y_temp, p_temp, average='weighted')
     print("\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
 
-    """with open('Confronto/' + path + '/P' + str(p) + '/test.csv', 'w') as f:
+    """with open('Confronto/' + path + '/P' + str(p) + '/window.csv', 'w') as f:
         wtr = csv.writer(f)
         wtr.writerow(w_pred)
         wtr.writerow(w_mod)
         wtr.writerow(w_test)
 
-    pd.read_csv('Confronto/' + path + '/P' + str(p) + '/test.csv',
-                header=None).T.to_csv('Confronto/' + path + '/P' + str(p) + '/test.csv', header=False, index=False)
-    """
+    pd.read_csv('Confronto/' + path + '/P' + str(p) + '/window.csv',
+                header=None).T.to_csv('Confronto/' + path + '/P' + str(p) + '/window.csv', header=False, index=False)"""
+
 
 print("\n Totale: ")
 
 arr = precision_recall_fscore_support(y_test, p_test, average='weighted')
 print("\n\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
 
-
-
-"""# Confusion Matrix
+# Confusion Matrix
 C = confusion_matrix(p_test, y_test)
 df_cm = pd.DataFrame(C, classi, classi)
 sns.set(font_scale=1.4)
 graphic = sns.heatmap(df_cm, annot=True, annot_kws={"size": 16}, cmap="YlGnBu", fmt='g')
-plt.show()"""
+plt.show()
