@@ -9,17 +9,19 @@ import seaborn as sns
 import warnings
 from sklearn.linear_model import RidgeClassifier
 
+from sklearn.metrics import matthews_corrcoef
+
 warnings.filterwarnings('ignore')
 
 sport = input("sport : c/f \n")
 
 if sport == "c":
-    stringPath = "TestTrainingFile\\calcio"
+    stringPath = "TestTrainingFile/calcio"
     path = "calcio"
     classi = ["1000 metri", "Navetta 10x5", "Scatto 30m", "Triplo salto in lungo"]
 
 else:
-    stringPath = "TestTrainingFile\\futsal"
+    stringPath = "TestTrainingFile/futsal"
     path = "futsal"
     classi = ["1000 metri", "Navetta 5x10", "Scatto 10m", "Triplo salto in lungo"]
 
@@ -70,14 +72,14 @@ for p in range(1, 6):
     arr = precision_recall_fscore_support(y_temp, p_temp, average='weighted')
     print("\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
 
-    """with open('Confronto/' + path + '/P' + str(p) + '/window.csv', 'w') as f:
+    with open('Confronto/' + path + '/P' + str(p) + '/window.csv', 'w') as f:
         wtr = csv.writer(f)
         wtr.writerow(w_pred)
         wtr.writerow(w_mod)
         wtr.writerow(w_test)
 
     pd.read_csv('Confronto/' + path + '/P' + str(p) + '/window.csv',
-                header=None).T.to_csv('Confronto/' + path + '/P' + str(p) + '/window.csv', header=False, index=False)"""
+                header=None).T.to_csv('Confronto/' + path + '/P' + str(p) + '/window.csv', header=False, index=False)
 
 
 print("\n Totale: ")
@@ -85,6 +87,7 @@ print("\n Totale: ")
 arr = precision_recall_fscore_support(y_test, p_test, average='weighted')
 print("\n\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
 
+print(matthews_corrcoef(y_test, p_test))
 # Confusion Matrix
 C = confusion_matrix(p_test, y_test)
 df_cm = pd.DataFrame(C, classi, classi)

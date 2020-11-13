@@ -33,14 +33,11 @@ else:
     fileName = 'Features/futsal/P'
 
 for p in range(1, 6):
-    # for s in range(1, 4):
     data = pd.read_csv(fileName + str(p) + '/features.csv', header=0, low_memory=False, index_col=0)
     clm1 = data.columns.values
 
     cls = data.Activity
-    # clx = data.Time
     x = data.drop('Activity', axis=1)
-    # y = data.drop('Time', axis=1)
     clm2 = x.columns.values
 
     index = []

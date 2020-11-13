@@ -34,8 +34,6 @@ for p in range(1, 6):
     count = 0
     for s in range(3, 6):
         count += 1
-        #if p == 4:
-         #   s = 1
         with open(fileName + 'P' + str(p) + path + str(count) + '.csv', 'w', newline='') as f:
             wtr = csv.writer(f)
             wtr.writerow(clm)

@@ -84,10 +84,7 @@ for p in range(1, 6):
     count = 0
     for s in range(3, 6):
         count += 1
-        #if p == 4:
-        #    s = 1
         with open(fileName + 'P' + str(p) + path + str(count) + '.csv', 'w', newline='') as f:
-            # with open(fileName + '.csv', 'a', newline='') as f:
             wtr = csv.writer(f)
             wtr.writerow(clm)
 
@@ -176,16 +173,4 @@ for p in range(1, 6):
                     if len(clm) == len(row):
                         wtr.writerow(row)
 
-
-"""for p in range(1, 6):
-    for s in range(1, 3):
-        data = pd.read_csv(fileName + "P" + str(p) + path + str(s) + ".csv", index_col=0)
-        data = data[data['Activity'] == "1000 metri"]
-        data.drop('Activity', axis=1, inplace=True)
-        data.to_csv(fileName + 'P' + str(p) + '.csv')"""
-
-"""data = pd.read_csv(fileName + ".csv")
-data = data[data['Activity'] == "1000 metri"]
-data.drop('Activity', axis=1, inplace=True)
-data.to_csv(fileName + '.csv')"""
 

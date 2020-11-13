@@ -1,17 +1,13 @@
-import csv
-
 import pandas as pd
-import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 from sklearn.metrics import confusion_matrix, precision_recall_fscore_support, accuracy_score
 import warnings
 from sklearn.linear_model import RidgeClassifier
-
+from sklearn.metrics import matthews_corrcoef
 warnings.filterwarnings('ignore')
 
 sport = input("sport : c/f \n")
-# Load the Diabetes dataset
 
 if sport == "c":
     stringPath = "ConfrontoMod/calcio/P"
@@ -51,7 +47,7 @@ print("\n Totale: ")
 
 arr = precision_recall_fscore_support(y_test, p_test, average='weighted')
 print("\n\nPrecision: ", arr[0], "\nRecall: ", arr[1], "\nF-1:", arr[2])
-
+print(matthews_corrcoef(y_test, p_test))
 # Confusion Matrix
 C = confusion_matrix(p_test, y_test)
 df_cm = pd.DataFrame(C, classi, classi)

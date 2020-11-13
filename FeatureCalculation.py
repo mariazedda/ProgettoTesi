@@ -250,16 +250,3 @@ for p in range(1, 6):
 
                             if len(clm) == len(row):
                                 wtr.writerow(row)
-
-
-"""for p in range(1, 6):
-    data = pd.read_csv(fileName + 'P' + str(p) + '/Exercise1.csv', index_col=0)
-    data = data[data['Activity'] == "1000 metri"]
-    data.drop('Activity', axis=1, inplace=True)
-    data.to_csv(fileName + 'P' + str(p) + '/Exercise1.csv')"""
-
-"""data = pd.read_csv(fileName + ".csv")
-data = data[data['Activity'] == "1000 metri"]
-data.drop('Activity', axis=1, inplace=True)
-data.to_csv(fileName + '.csv')"""
-
